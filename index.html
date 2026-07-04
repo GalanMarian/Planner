@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plan Citire Biblie - Marian & Andreea</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #6d5dfc;
+      --secondary: #ec4899;
+      --bg: #f8f6f1;
+      --card: #ffffff;
+      --text: #1f2937;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg,#fff8ec,#f4f0ff);
+      color: var(--text);
+    }
+
+    .hero {
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-size: 3rem;
+    }
+
+    .hero p {
+      color: #666;
+    }
+
+    .container {
+      width: min(1200px, calc(100% - 30px));
+      margin: 0 auto 40px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(2,1fr);
+      gap: 24px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 15px 40px rgba(0,0,0,.08);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .progress-circle {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      color: white;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .marian-circle {
+      background: var(--primary);
+    }
+
+    .andreea-circle {
+      background: var(--secondary);
+    }
+
+    .progress-bar {
+      margin: 20px 0;
+      height: 12px;
+      background: #eee;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      transition: .3s;
+    }
+
+    .marian-fill {
+      background: var(--primary);
+    }
+
+    .andreea-fill {
+      background: var(--secondary);
+    }
+
+    .day {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 10px;
+      padding: 12px;
+      border-radius: 14px;
+      background: #fafafa;
+      border: 1px solid #eee;
+    }
+
+    .day.done {
+      background: #ecfff0;
+      border-color: #b7e6bf;
+    }
+
+    .day input {
+      width: 20px;
+      height: 20px;
+      margin-top: 2px;
+    }
+
+    .day strong {
+      display: block;
+    }
+
+    .reset {
+      display: block;
+      margin: 30px auto;
+      padding: 14px 24px;
+      border: none;
+      border-radius: 999px;
+      background: #222;
+      color: white;
+      cursor: pointer;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #666;
+    }
+
+    @media(max-width: 900px) {
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .hero h1 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<section class="hero">
+  <h1>📖 Plan Noul Testament - 30 de Zile</h1>
+  <p>Marian & Andreea • Citim impreuna si urmarim progresul separat</p>
+</section>
+
+<div class="container">
+
+  <div class="cards">
+
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <h2>Marian</h2>
+        </div>
+        <div class="progress-circle marian-circle">
+          <span id="marianPercent">0%</span>
+        </div>
+      </div>
+
+      <div class="progress-bar">
+        <div id="marianBar" class="progress-fill marian-fill"></div>
+      </div>
+
+      <div id="marianPlan"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <h2>Andreea</h2>
+        </div>
+        <div class="progress-circle andreea-circle">
+          <span id="andreeaPercent">0%</span>
+        </div>
+      </div>
+
+      <div class="progress-bar">
+        <div id="andreeaBar" class="progress-fill andreea-fill"></div>
+      </div>
+
+      <div id="andreeaPlan"></div>
+    </div>
+
+  </div>
+
+  <button class="reset" onclick="resetAll()">
+    Reseteaza progresul
+  </button>
+
+</div>
+
+<footer>
+  ✨ "Cuvantul Tau este o candela pentru picioarele mele si o lumina pe cararea mea."
+</footer>
+
+<script>
+  const plan = [
+    ["Ziua 1","Matei 1-7"],
+    ["Ziua 2","Matei 8-14"],
+    ["Ziua 3","Matei 15-21"],
+    ["Ziua 4","Matei 22-28"],
+    ["Ziua 5","Marcu 1-6"],
+    ["Ziua 6","Marcu 7-11"],
+    ["Ziua 7","Marcu 12-16"],
+    ["Ziua 8","Luca 1-5"],
+    ["Ziua 9","Luca 6-10"],
+    ["Ziua 10","Luca 11-15"],
+    ["Ziua 11","Luca 16-20"],
+    ["Ziua 12","Luca 21-24"],
+    ["Ziua 13","Ioan 1-5"],
+    ["Ziua 14","Ioan 6-10"],
+    ["Ziua 15","Ioan 11-15"],
+    ["Ziua 16","Ioan 16-21"],
+    ["Ziua 17","Faptele Apostolilor 1-7"],
+    ["Ziua 18","Faptele Apostolilor 8-14"],
+    ["Ziua 19","Faptele Apostolilor 15-21"],
+    ["Ziua 20","Faptele Apostolilor 22-28"],
+    ["Ziua 21","Romani 1-8"],
+    ["Ziua 22","Romani 9-16"],
+    ["Ziua 23","1 Corinteni 1-10"],
+    ["Ziua 24","1 Corinteni 11-16, 2 Corinteni 1-5"],
+    ["Ziua 25","2 Corinteni 6-13, Galateni"],
+    ["Ziua 26","Efeseni, Filipeni, Coloseni"],
+    ["Ziua 27","1 Tesaloniceni, 2 Tesaloniceni, 1 Timotei, 2 Timotei"],
+    ["Ziua 28","Tit, Filimon, Evrei 1-7"],
+    ["Ziua 29","Evrei 8-13, Iacov, 1 Petru, 2 Petru"],
+    ["Ziua 30","1 Ioan, 2 Ioan, 3 Ioan, Iuda, Apocalipsa"]
+  ];
+
+  function render(person) {
+    const container = document.getElementById(person + "Plan");
+
+    const saved = JSON.parse(
+        localStorage.getItem(person) || "{}"
+    );
+
+    container.innerHTML = "";
+
+    plan.forEach((item, index) => {
+
+      const checked = saved[index] || false;
+
+      const row = document.createElement("label");
+      row.className = "day " + (checked ? "done" : "");
+
+      row.innerHTML = `
+            <input
+              type="checkbox"
+              ${checked ? "checked" : ""}
+              data-person="${person}"
+              data-index="${index}"
+            >
+            <div>
+                <strong>${item[0]}</strong>
+                <div>${item[1]}</div>
+            </div>
+        `;
+
+      container.appendChild(row);
+    });
+
+    updateProgress(person);
+  }
+
+  function updateProgress(person) {
+
+    const data = JSON.parse(
+        localStorage.getItem(person) || "{}"
+    );
+
+    const completed = Object.values(data)
+    .filter(Boolean)
+        .length;
+
+    const percent = Math.round(
+        completed / plan.length * 100
+    );
+
+    document.getElementById(
+        person + "Percent"
+    ).textContent = percent + "%";
+
+    document.getElementById(
+        person + "Bar"
+    ).style.width = percent + "%";
+  }
+
+  document.addEventListener("change", e => {
+
+    if (e.target.type !== "checkbox") return;
+
+    const person = e.target.dataset.person;
+    const index = e.target.dataset.index;
+
+    const data = JSON.parse(
+        localStorage.getItem(person) || "{}"
+    );
+
+    data[index] = e.target.checked;
+
+    localStorage.setItem(
+        person,
+        JSON.stringify(data)
+    );
+
+    e.target.closest(".day")
+    .classList.toggle("done", e.target.checked);
+
+    updateProgress(person);
+  });
+
+  function resetAll() {
+
+    if (!confirm("Resetare progres pentru Marian si Andreea?")) {
+      return;
+    }
+
+    localStorage.removeItem("marian");
+    localStorage.removeItem("andreea");
+
+    render("marian");
+    render("andreea");
+  }
+
+  render("marian");
+  render("andreea");
+</script>
+
+</body>
+</html>
