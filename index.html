@@ -115,6 +115,38 @@
       background: var(--secondary);
     }
 
+    .mobile-switch{
+      display:none;
+      text-align:center;
+      margin-bottom:20px;
+    }
+
+    .mobile-switch button{
+      border:none;
+      background:#6d5dfc;
+      color:white;
+      padding:14px 24px;
+      border-radius:999px;
+      font-size:16px;
+      font-weight:bold;
+      cursor:pointer;
+    }
+
+    @media (max-width:900px){
+
+      .mobile-switch{
+        display:block;
+      }
+
+      .card{
+        display:none;
+      }
+
+      .card.active{
+        display:block;
+      }
+    }
+
     .day {
       display: flex;
       gap: 12px;
@@ -176,11 +208,20 @@
   <p>Marian & Andreea • Citim impreuna si urmarim progresul separat</p>
 </section>
 
+
+<div class="mobile-switch">
+  <button onclick="switchPerson()">
+    Schimbă cu <span id="nextUser">Andreea</span>
+  </button>
+</div>
+
+
+
 <div class="container">
 
   <div class="cards">
 
-    <div class="card">
+      <div class="card active" id="card-marian">
       <div class="card-header">
         <div>
           <h2>Marian</h2>
@@ -197,7 +238,7 @@
       <div id="marianPlan"></div>
     </div>
 
-    <div class="card">
+    <div class="card" id="card-andreea">
       <div class="card-header">
         <div>
           <h2>Andreea</h2>
@@ -406,6 +447,50 @@
 
     updateProgress(person);
   }
+
+  let currentUser = "marian";
+
+  function switchPerson(){
+
+    const marianCard = document.getElementById("card-marian");
+    const andreeaCard = document.getElementById("card-andreea");
+
+    if(currentUser === "marian"){
+
+      marianCard.classList.remove("active");
+      andreeaCard.classList.add("active");
+
+      currentUser = "andreea";
+
+      document.getElementById("nextUser").textContent = "Marian";
+
+    } else {
+
+      andreeaCard.classList.remove("active");
+      marianCard.classList.add("active");
+
+      currentUser = "marian";
+
+      document.getElementById("nextUser").textContent = "Andreea";
+    }
+  }
+
+  function initMobileView(){
+
+    if(window.innerWidth <= 900){
+
+      document
+      .getElementById("card-marian")
+      .classList.add("active");
+
+      document
+      .getElementById("card-andreea")
+      .classList.remove("active");
+    }
+  }
+
+  initMobileView();
+  window.addEventListener("resize", initMobileView);
 
   function updateProgress(person) {
 
